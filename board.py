@@ -2,6 +2,7 @@ import pygame
 from constants import BLACK, SQUARE_SIZE, DARK_GREY, DARK_WHITE
 from stones import Stone
 import copy
+import os
 
 class Board:
     def __init__(self):
@@ -67,7 +68,7 @@ class Board:
         self.capture_count = 0
         self.ko_list_counter = -1
         self.ko_list = []
-        self.board_img = pygame.image.load('GoV2/images/board1.png')
+        self.board_img = pygame.image.load(os.path.join('images', 'Board1.png'))
         self.pass_count = 0
         self.score_border_b = False
         self.score_border_w = False

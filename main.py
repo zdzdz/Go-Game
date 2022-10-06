@@ -1,11 +1,12 @@
 import pygame
+import os
 from constants import SQUARE_SIZE, WIDTH, HEIGHT, FPS
 from board import Board
 from interface import Interface
 
 pygame.init()
 pygame.display.set_caption('Go by Gavril Marinov (a python GURU)')
-logo = pygame.image.load('GoV2/images/go_icon.png')
+logo = pygame.image.load(os.path.join('images', 'go_icon.png'))
 pygame.display.set_icon(logo)
 win = pygame.display.set_mode((WIDTH, HEIGHT))
 
