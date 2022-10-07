@@ -1,5 +1,5 @@
 import pygame
-from constants import BLACK, SQUARE_SIZE, DARK_GREY, DARK_WHITE
+from constants import BLACK, SQUARE_SIZE, DARK_GREY, DARK_WHITE, WHITE
 from stones import Stone
 import copy
 import os
@@ -77,8 +77,7 @@ class Board:
         self.white_territory_count = 0
         self.captued_white_stones = 0
         self.captued_black_stones = 0
-        self.black_score = 0
-        self.white_score = 6.5
+        self.komi = 6.5
         self.start_time = None
 
     def draw_board(self, win):
@@ -104,15 +103,21 @@ class Board:
         pygame.draw.circle(win, BLACK, (384, 384), 5)
 
     def draw_stones(self, win):
-        for x in range(20):
-            for y in range(20):
-                stone = self.board[x][y]
-                if stone == self.white_stone:
-                    stone = Stone(x, y, DARK_WHITE)
-                    stone.draw(win)
-                elif stone == self.black_stone:
-                    stone = Stone(x, y, BLACK)
-                    stone.draw(win)
+        for x in range(21):
+            for y in range(21):
+                field = self.board[x][y]
+                if field == self.white_stone:
+                    field = Stone(x, y, DARK_WHITE)
+                    field.draw_stone(win)
+                elif field == self.black_stone:
+                    field = Stone(x, y, BLACK)
+                    field.draw_stone(win)
+                elif field == self.black_territory:
+                    field = Stone(x, y, BLACK)
+                    field.draw_territory(win)
+                elif field == self.white_territory:
+                    field = Stone(x, y, WHITE)
+                    field.draw_territory(win)
 
     def place_stone(self, row, col, placed_stone, opponent_stone):
         if self.capture_board == True:
@@ -129,13 +134,6 @@ class Board:
         # Skip move if pass
         self.white_to_move = not self.white_to_move
         self.pass_count += 1
-        # End game if pass from both players
-        if self.pass_count == 2:
-            print('Game end!')
-            self.calc_score()
-            self.print_board(self.board)
-            print('White territory: ', self.white_territory_count)
-            print('Black territory: ', self.black_territory_count)
 
     def check_move(self, row, col, placed_stone, opponent_stone):
         self.capture_board = True
@@ -271,9 +269,21 @@ class Board:
                     self.calc_score_liberties(x, y)
                     if self.score_border_b == True and self.score_border_w == False:
                         self.black_territory_count += self.territory_count
+                        for a in range(21):
+                            for b in range(21):
+                                if self.board[a][b] == self.marker:
+                                    self.board[a][b] = self.black_territory
                     elif self.score_border_b == False and self.score_border_w == True:
                         self.white_territory_count += self.territory_count
-
+                        for a in range(21):
+                            for b in range(21):
+                                if self.board[a][b] == self.marker:
+                                    self.board[a][b] = self.white_territory
+                    else:
+                        for a in range(21):
+                            for b in range(21):
+                                if self.board[a][b] == self.marker:
+                                    self.board[a][b] = self.neutral_territory
                     self.score_border_b = False
                     self.score_border_w = False
                     self.territory_count = 0
@@ -297,7 +307,7 @@ class Board:
         # Walk West recursively
         self.calc_score_liberties(row, col - 1)
 
-    def remove_dead_stones(self, row, col):
+    def remove_dead_stones(self):
         pass
 
     # For debug

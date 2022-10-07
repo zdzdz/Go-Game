@@ -1,8 +1,5 @@
 import pygame
-from board import Board
-from constants import DARK_GREY, LIGHT_GREY, WHITE, RED, BLACK
-
-board = Board()
+from constants import DARK_GREY, LIGHT_GREY, WHITE, RED, GREEN
 
 class Interface:
     def __init__(self):
@@ -25,13 +22,12 @@ class Interface:
         self.player_txt_col = (WHITE)
         self.player_width = 200
         self.player_height = 65
-
         self.b_player_pos_x = 796
         self.b_player_pos_y = 23
         self.b_player_txt = self.int_font.render(
             'Black', True, self.player_txt_col)
-        self.w_player_pod_x = 796
-        self.w_player_pos_y = 100
+        self.w_player_pos_x = 796
+        self.w_player_pos_y = 130
         self.w_player_txt = self.int_font.render(
             'White', True, self.player_txt_col)
         # Invalid move
@@ -64,16 +60,16 @@ class Interface:
         win.blit(capture_count_b,
                  (self.b_player_pos_x + 5, self.b_player_pos_y + 40))
         win.blit(self.w_player_txt,
-                 (self.w_player_pod_x + 5, self.w_player_pos_y + 5))
+                 (self.w_player_pos_x + 5, self.w_player_pos_y + 5))
         win.blit(capture_count_w,
-                 (self.w_player_pod_x + 5, self.w_player_pos_y + 40))
+                 (self.w_player_pos_x + 5, self.w_player_pos_y + 40))
 
     def draw_players_turn(self, win, turn):
         if turn == False:
             pygame.draw.rect(win, self.player_box_col, (self.b_player_pos_x,
                              self.b_player_pos_y, self.player_width, self.player_height))
         else:
-            pygame.draw.rect(win, self.player_box_col, (self.w_player_pod_x,
+            pygame.draw.rect(win, self.player_box_col, (self.w_player_pos_x,
                              self.w_player_pos_y, self.player_width, self.player_height))
 
     def draw_inv_move(self, win):
@@ -81,3 +77,21 @@ class Interface:
                                                     self.inv_move_pos_y, self.inv_move_width, self.inv_move_height))
         win.blit(self.inv_move_txt,
                  (self.inv_move_pos_x + 5, self.inv_move_pos_y + 5))
+
+    def draw_total_score(self, win, black_territory, captured_white_stones, white_territory, captured_black_stones, komi):
+        total_score_w = self.int_font2.render(
+            'Total Score: ' + str(white_territory + captured_black_stones + komi), True, self.player_txt_col)
+        total_score_b = self.int_font2.render(
+            'Total Score: ' + str(black_territory + captured_white_stones), True, self.player_txt_col)
+        win.blit(total_score_w, (self.w_player_pos_x +
+                 5, self.w_player_pos_y + 65))
+        win.blit(total_score_b, (self.b_player_pos_x +
+                 5, self.b_player_pos_y + 65))
+        black_wins = self.int_font.render(
+            'Black Wins!', True, GREEN)
+        white_wins = self.int_font.render(
+            'White Wins!', True, GREEN)
+        if white_territory + captured_black_stones + komi > black_territory + captured_white_stones:
+            win.blit(white_wins, (self.w_player_pos_x + 5, self.w_player_pos_y + 5))
+        else:
+            win.blit(black_wins, (self.b_player_pos_x + 5, self.b_player_pos_y + 5))

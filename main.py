@@ -30,9 +30,8 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0]:
-                print(pos)
                 # If mouse click is on the Go board
-                if 12 <= pos[0] <= 755 and 12 <= pos[1] <= 755:
+                if 12 <= pos[0] <= 755 and 12 <= pos[1] <= 755 and board.pass_count < 2:
                     row, col = get_row_col_mouse(pos)
                     if board.white_to_move == False:
                         placed_stone = board.black_stone
@@ -44,15 +43,22 @@ def main():
                                       placed_stone, opponent_stone)
                 # If pass button is clicked
                 elif (interface.pass_pos_x <= pos[0] <= interface.pass_pos_x + 140 and
-                      interface.pass_pos_y <= pos[1] <= interface.pass_pos_y + 40):
+                      interface.pass_pos_y <= pos[1] <= interface.pass_pos_y + 40 and board.pass_count < 2):
                     board.pass_move()
 
         board.draw_board(win)
-        interface.draw_players_turn(win, board.white_to_move)
-        interface.draw_players_text(win, board.captued_white_stones, board.captued_black_stones)
-        interface.draw_pass(win, pos)
-        if board.start_time and pygame.time.get_ticks() - board.start_time < 600:
-            interface.draw_inv_move(win)
+        if board.pass_count < 2:
+            interface.draw_players_turn(win, board.white_to_move)
+            interface.draw_pass(win, pos)
+            if board.start_time and pygame.time.get_ticks() - board.start_time < 600:
+                interface.draw_inv_move(win)
+        interface.draw_players_text(
+            win, board.captued_white_stones, board.captued_black_stones)
+        if board.pass_count == 2:
+            board.calc_score()
+            interface.draw_total_score(win, board.white_territory_count, board.captued_black_stones,
+                                       board.black_territory_count, board.captued_white_stones, board.komi)
+
         pygame.display.update()
 
 main()
