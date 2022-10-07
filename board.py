@@ -170,8 +170,6 @@ class Board:
             self.ko_list = []
             # Reset pass counter as a stone is placed
             self.pass_count = 0
-        print('Captured Black Stones:', self.captued_black_stones)
-        print('Captured White Stones:', self.captued_white_stones)
 
     def calc_liberties(self, row, col, stone_to_calc):
         stone = self.board[row][col]
@@ -273,22 +271,8 @@ class Board:
                     self.calc_score_liberties(x, y)
                     if self.score_border_b == True and self.score_border_w == False:
                         self.black_territory_count += self.territory_count
-                        for x in range(21):
-                            for y in range(21):
-                                if self.board[x][y] == self.marker:
-                                    self.board[x][y] = self.black_territory
                     elif self.score_border_b == False and self.score_border_w == True:
                         self.white_territory_count += self.territory_count
-                        for x in range(21):
-                            for y in range(21):
-                                if self.board[x][y] == self.marker:
-                                    self.board[x][y] = self.white_territory
-                    else:
-                        for x in range(21):
-                            for y in range(21):
-                                if self.board[x][y] == self.marker:
-                                    self.board[x][y] = self.neutral_territory
-                    self.print_board(self.board)
 
                     self.score_border_b = False
                     self.score_border_w = False
