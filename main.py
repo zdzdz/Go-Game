@@ -41,23 +41,24 @@ def main():
                         opponent_stone = board.black_stone
                     board.place_stone(row + 1, col + 1,
                                       placed_stone, opponent_stone)
-                # If pass button is clicked
                 elif (interface.pass_pos_x <= pos[0] <= interface.pass_pos_x + 140 and
                       interface.pass_pos_y <= pos[1] <= interface.pass_pos_y + 40 and board.pass_count < 2):
                     board.pass_move()
-
         board.draw_board(win)
         if board.pass_count < 2:
             interface.draw_players_turn(win, board.white_to_move)
+            interface.draw_players_text(
+            win, board.captued_white_stones, board.captued_black_stones)
             interface.draw_pass(win, pos)
             if board.start_time and pygame.time.get_ticks() - board.start_time < 600:
                 interface.draw_inv_move(win)
-        interface.draw_players_text(
-            win, board.captued_white_stones, board.captued_black_stones)
         if board.pass_count == 2:
+            interface.draw_death_stones(win, board.white_to_move)
+            interface.draw_players_text(
+            win, board.captued_white_stones, board.captued_black_stones)
             board.calc_score()
-            interface.draw_total_score(win, board.white_territory_count, board.captued_black_stones,
-                                       board.black_territory_count, board.captued_white_stones, board.komi)
+            # interface.draw_total_score(win, board.white_territory_count, board.captued_black_stones,
+                                #    board.black_territory_count, board.captued_white_stones, board.komi)
 
         pygame.display.update()
 
