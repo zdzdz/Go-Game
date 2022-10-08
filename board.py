@@ -9,25 +9,25 @@ class Board:
         # Store board state
         self.board = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 'b', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'b', 0, 1],
-            [1, 'b', 'w', 'w', 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'b', 0, 1],
-            [1, 0, 'w', 0, 0, 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'b', 1],
-            [1, 0, 'w', 0, 0, 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 'w', 0, 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 'w', 'b', 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 'w', 'b', 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 'w', 'w', 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 'w', 'w', 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 'b', 0, 'w', 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'b', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 'w', 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'b', 1],
-            [1, 0, 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'b', 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
         ]
         # Temporally store of stones\group of stones in a separate board for potential capturing
@@ -56,6 +56,8 @@ class Board:
         ]
         self.black_stone = 'b'
         self.white_stone = 'w'
+        self.b_death_stone = 'bd'
+        self.w_death_stone = 'wd'
         self.black_territory = 'bt'
         self.white_territory = 'wt'
         self.neutral_territory = 'n'
@@ -69,6 +71,8 @@ class Board:
         self.ko_list_counter = -1
         self.ko_list = []
         self.board_img = pygame.image.load(os.path.join('images', 'Board1.png'))
+        # self.stone_sound = pygame.mixer.Sound(os.path.join('sounds', 'Short.m4a'))
+        # self.capture_sound = pygame.mixer.Sound(os.path.join('sounds', 'Long.wav'))
         self.pass_count = 0
         self.score_border_b = False
         self.score_border_w = False
@@ -79,10 +83,6 @@ class Board:
         self.captued_black_stones = 0
         self.komi = 6.5
         self.start_time = None
-
-    def draw_board(self, win):
-        self.draw_squares(win)
-        self.draw_stones(win)
 
     def draw_squares(self, win):
         win.fill(DARK_GREY)
@@ -118,6 +118,14 @@ class Board:
                 elif field == self.white_territory:
                     field = Stone(x, y, WHITE)
                     field.draw_territory(win)
+                elif field == self.w_death_stone:
+                    field = Stone(x, y, WHITE)
+                    field.draw_stone(win)
+                    field.draw_cross(win)
+                elif field == self.b_death_stone:
+                    field = Stone(x, y, BLACK)
+                    field.draw_stone(win)
+                    field.draw_cross(win)
 
     def place_stone(self, row, col, placed_stone, opponent_stone):
         if self.capture_board == True:
@@ -134,6 +142,8 @@ class Board:
         # Skip move if pass
         self.white_to_move = not self.white_to_move
         self.pass_count += 1
+        if self.pass_count == 2:
+            self.white_to_move = False
 
     def check_move(self, row, col, placed_stone, opponent_stone):
         self.capture_board = True
@@ -163,6 +173,7 @@ class Board:
             self.ko_list_counter += 1
         # Reset ko board list and counter if stone with liberties is placed on the board / Ko sequence is terminated
         if self.capture_board == True:
+            # self.stone_sound.play()
             self.capture_count = 0
             self.ko_list_counter = -1
             self.ko_list = []
@@ -231,6 +242,8 @@ class Board:
             self.capture_count += 1
             # Reset pass counter
             self.pass_count = 0
+            # Play capture sound
+            # self.capture_sound.play()
         # Prevent capturing of the board
         self.capture_board = False
 
@@ -240,6 +253,7 @@ class Board:
             # Set intersection as empty on the board if move is suicidial
             self.board[row][col] = 0
             # self.restore_board(stone_to_calc)
+            self.restore_board(stone_to_calc)
             return True
         self.restore_board(stone_to_calc)
 
@@ -307,8 +321,11 @@ class Board:
         # Walk West recursively
         self.calc_score_liberties(row, col - 1)
 
-    def remove_dead_stones(self):
-        pass
+    def remove_dead_stones(self, row, col, turn):
+        if turn == False and self.board[row][col] == self.black_stone:
+            self.board[row][col] = self.b_death_stone
+        elif turn == True and self.board[row][col] == self.white_stone:
+            self.board[row][col] = self.w_death_stone
 
     # For debug
     def print_board(self, board):

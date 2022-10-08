@@ -1,5 +1,5 @@
 import pygame
-from constants import SQUARE_SIZE
+from constants import SQUARE_SIZE, RED
 
 class Stone:
     PADDING = 1
@@ -11,6 +11,8 @@ class Stone:
         self.x = 0
         self.y = 0
         self.calc_pos()
+        self.cross_font = pygame.font.SysFont('Consolas', 28)
+        self.cross_txt = self.cross_font.render('x', True, RED)
 
     def calc_pos(self):
         self.x = SQUARE_SIZE * (self.col) + SQUARE_SIZE // 2
@@ -22,3 +24,6 @@ class Stone:
 
     def draw_territory(self, win):
         pygame.draw.rect(win, self.color, (self.x - 4, self.y - 4, 16, 16))
+
+    def draw_cross(self, win):
+        win.blit(self.cross_txt, (self.x - 4, self.y - 10))
