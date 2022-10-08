@@ -5,7 +5,7 @@ from board import Board
 from interface import Interface
 
 pygame.init()
-pygame.display.set_caption('Go by Gavril Marinov (a python GURU)')
+pygame.display.set_caption('Go by Gavril Marinov')
 logo = pygame.image.load(os.path.join('images', 'go_icon.png'))
 pygame.display.set_icon(logo)
 win = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -62,9 +62,19 @@ def main():
                 # If ready button is clicked (white)
                 elif (interface.pos_x <= pos[0] <= interface.pos_x + interface.ready_width and 
                       interface.w_ready_pos_y <= pos[1] <= interface.w_ready_pos_y + interface.ready_height):
+                # If new game button is clicked
                     board.calc_score()
+                elif (interface.pos_x <= pos[0] <= interface.pos_x + interface.new_game_width and 
+                      interface.new_game_pos_y <= pos[1] <= interface.new_game_pos_y + interface.new_game_height and 
+                      board.game_end == True):
+                    main()
+                # If exit game button is clicked
+                elif (interface.pos_x <= pos[0] <= interface.pos_x + interface.quit_width and 
+                      interface.quit_pos_y <= pos[1] <= interface.quit_pos_y + interface.quit_height):
+                    run = False
         board.draw_squares(win)
         board.draw_stones(win)
+        interface.draw_quit(win, pos)
         # Game in progress
         if board.pass_count < 2:
             interface.draw_players_turn(win, board.white_to_move)
@@ -85,5 +95,6 @@ def main():
                         win, board.captued_white_stones, board.captued_black_stones)
             interface.draw_total_score(win, board.white_territory_count, board.captued_black_stones,
                                     board.black_territory_count, board.captued_white_stones, board.komi)
+            interface.draw_new_game(win, pos)
         pygame.display.update()
 main()

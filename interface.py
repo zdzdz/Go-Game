@@ -8,7 +8,7 @@ class Interface:
         self.int_font2 = pygame.font.SysFont('Consolas', 28, bold=True)
         self.int_font3 = pygame.font.SysFont('Consolas', 18)
         self.int_font4 = pygame.font.SysFont('Consolas', 18, bold=True)
-        # x position for pass, ready and players tab
+        # x position for pass, ready, players tab and new game
         self.pos_x = 796
         # Pass button
         self.pass_width = 70
@@ -50,6 +50,18 @@ class Interface:
         self.b_death_stones_txt_pos_y = 88
         self.death_stones_txt = self.int_font3.render(
             'Remove the death stones', True, RED)
+        # New Game
+        self.new_game_width = 130
+        self.new_game_height = 34
+        self.new_game_pos_y = 607
+        self.new_game_text = self.int_font2.render(
+            'New Game', True, WHITE)
+        # Quit
+        self.quit_width = 144
+        self.quit_height = 34
+        self.quit_pos_y = 650
+        self.quit_text = self.int_font2.render(
+            'Exit Game', True, WHITE)
 
     def draw_pass(self, win, pos, turn):
         if turn == False:
@@ -155,3 +167,23 @@ class Interface:
                 pygame.draw.rect(win, DARK_GREY, (self.pos_x,
                                 self.w_ready_pos_y, self.ready_width, self.ready_height))
                 win.blit(self.ready_text, (self.pos_x + 5, self.w_ready_pos_y + 5))
+    
+    def draw_new_game(self, win, pos):
+            if (self.pos_x <= pos[0] <= self.pos_x + self.new_game_width and self.new_game_pos_y <= pos[1] <= self.new_game_pos_y + self.new_game_height):
+                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x,
+                                self.new_game_pos_y, self.new_game_width, self.new_game_height))
+                win.blit(self.new_game_text, (self.pos_x + 5, self.new_game_pos_y + 5))
+            else:
+                pygame.draw.rect(win, DARK_GREY, (self.pos_x,
+                                self.new_game_pos_y, self.new_game_width, self.new_game_height))
+                win.blit(self.new_game_text, (self.pos_x + 5, self.new_game_pos_y + 5))
+
+    def draw_quit(self, win, pos):
+            if (self.pos_x <= pos[0] <= self.pos_x + self.quit_width and self.quit_pos_y <= pos[1] <= self.quit_pos_y + self.quit_height):
+                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x,
+                                self.quit_pos_y, self.quit_width, self.quit_height))
+                win.blit(self.quit_text, (self.pos_x + 5, self.quit_pos_y + 5))
+            else:
+                pygame.draw.rect(win, DARK_GREY, (self.pos_x,
+                                self.quit_pos_y, self.quit_width, self.quit_height))
+                win.blit(self.quit_text, (self.pos_x + 5, self.quit_pos_y + 5))
