@@ -5,8 +5,9 @@ class Interface:
     def __init__(self):
         # Interface fonts
         self.int_font = pygame.font.SysFont('Consolas', 28)
-        self.int_font2 = pygame.font.SysFont('Consolas', 18)
-        self.int_font3 = pygame.font.SysFont('Consolas', 28, bold=True)
+        self.int_font2 = pygame.font.SysFont('Consolas', 28, bold=True)
+        self.int_font3 = pygame.font.SysFont('Consolas', 18)
+        self.int_font4 = pygame.font.SysFont('Consolas', 18, bold=True)
         # x position for pass, ready and players tab
         self.pos_x = 796
         # Pass button
@@ -37,7 +38,7 @@ class Interface:
         self.inv_move_height = 35
         self.inv_move_pos_x = 282
         self.inv_move_pos_y = 367
-        self.inv_move_txt = self.int_font3.render(
+        self.inv_move_txt = self.int_font2.render(
             'Invalid Move!', True, RED)
         # Death Stones message
         self.death_stones_width = 242
@@ -47,7 +48,7 @@ class Interface:
         self.w_death_stones_txt_pos_y = 415
         self.b_death_stones_pos_y = 20
         self.b_death_stones_txt_pos_y = 88
-        self.death_stones_txt = self.int_font2.render(
+        self.death_stones_txt = self.int_font3.render(
             'Remove the death stones', True, RED)
 
     def draw_pass(self, win, pos, turn):
@@ -71,9 +72,9 @@ class Interface:
                 win.blit(self.pass_text, (self.pos_x + 5, self.w_pass_pos_y + 5))
 
     def draw_players_text(self, win, b_count, w_count):
-        capture_count_b = self.int_font2.render(
+        capture_count_b = self.int_font3.render(
             'Captured Stones: ' + str(b_count), True, WHITE)
-        capture_count_w = self.int_font2.render(
+        capture_count_w = self.int_font3.render(
             'Captured Stones: ' + str(w_count), True, WHITE)
         win.blit(self.b_p_txt,
                  (self.pos_x + 5, self.b_p_pos_y + 5))
@@ -99,12 +100,21 @@ class Interface:
                  (self.inv_move_pos_x + 5, self.inv_move_pos_y + 5))
 
     def draw_total_score(self, win, white_territory, captured_black_stones, black_territory, captured_white_stones, komi):
-        total_score_w = self.int_font2.render(
+        white_territory_txt = self.int_font3.render(
+            'Territory: ' + str(white_territory), True, WHITE)
+        black_territory_txt = self.int_font3.render(
+            'Territory: ' + str(black_territory), True, WHITE)
+        komi_txt = self.int_font3.render(
+            'Komi: 6.5', True, WHITE)
+        total_score_w = self.int_font4.render(
             'Total Score: ' + str(white_territory + captured_black_stones + komi), True, WHITE)
-        total_score_b = self.int_font2.render(
+        total_score_b = self.int_font4.render(
             'Total Score: ' + str(black_territory + captured_white_stones), True, WHITE)
-        win.blit(total_score_w, (self.pos_x + 5, self.w_p_pos_y + 65))
-        win.blit(total_score_b, (self.pos_x + 5, self.b_p_pos_y + 65))
+        win.blit(black_territory_txt, (self.pos_x + 5, self.b_p_pos_y + 65))
+        win.blit(total_score_b, (self.pos_x + 5, self.b_p_pos_y + 90))
+        win.blit(white_territory_txt, (self.pos_x + 5, self.w_p_pos_y + 65))
+        win.blit(komi_txt, (self.pos_x + 5, self.w_p_pos_y + 89))
+        win.blit(total_score_w, (self.pos_x + 5, self.w_p_pos_y + 114))
         black_wins = self.int_font.render(
             'Black Wins!', True, GREEN)
         white_wins = self.int_font.render(

@@ -9,11 +9,11 @@ class Board:
         # Store board state
         self.board = [
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 'w', 0, 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 'w', 'b', 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 'w', 'b', 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 'w', 'w', 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 'w', 'w', 'w', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -83,6 +83,7 @@ class Board:
         self.captued_black_stones = 0
         self.komi = 6.5
         self.start_time = None
+        self.game_end = False
 
     def draw_squares(self, win):
         win.fill(DARK_GREY)
@@ -119,7 +120,7 @@ class Board:
                     field = Stone(x, y, WHITE)
                     field.draw_territory(win)
                 elif field == self.w_death_stone:
-                    field = Stone(x, y, WHITE)
+                    field = Stone(x, y, DARK_WHITE)
                     field.draw_stone(win)
                     field.draw_cross(win)
                 elif field == self.b_death_stone:
@@ -186,7 +187,7 @@ class Board:
             # Save stone coordinates in the capture block board
             self.capture_block[row][col] = stone
             # Mark the stone
-            self.board[row][col] = self.marker
+            self.board[row][col] = self.marker  # type: ignore
             # Look for neighbors:
             # Walk North recursively
             self.calc_liberties(row - 1, col, stone_to_calc)
@@ -199,7 +200,7 @@ class Board:
         # If the intersection is empty
         elif stone == 0:
             # Mark intersection as liberty
-            self.board[row][col] = self.liberty
+            self.board[row][col] = self.liberty  # type: ignore
             # Save the liberties in a list
             self.liberties.append(self.board[row][col])
 
@@ -286,31 +287,32 @@ class Board:
                         for a in range(21):
                             for b in range(21):
                                 if self.board[a][b] == self.marker:
-                                    self.board[a][b] = self.black_territory
+                                    self.board[a][b] = self.black_territory  # type: ignore
                     elif self.score_border_b == False and self.score_border_w == True:
                         self.white_territory_count += self.territory_count
                         for a in range(21):
                             for b in range(21):
                                 if self.board[a][b] == self.marker:
-                                    self.board[a][b] = self.white_territory
+                                    self.board[a][b] = self.white_territory  # type: ignore
                     else:
                         for a in range(21):
                             for b in range(21):
                                 if self.board[a][b] == self.marker:
-                                    self.board[a][b] = self.neutral_territory
+                                    self.board[a][b] = self.neutral_territory  # type: ignore
                     self.score_border_b = False
                     self.score_border_w = False
                     self.territory_count = 0
+        self.game_end = True
 
     def calc_score_liberties(self, row, col):
-        if self.board[row][col] != 0:
+        if self.board[row][col] != 0 and self.board[row][col] != 'bd' and self.board[row][col] != 'wd':
             if self.board[row][col] == self.black_stone:
                 self.score_border_b = True
             elif self.board[row][col] == self.white_stone:
                 self.score_border_w = True
             return
 
-        self.board[row][col] = self.marker
+        self.board[row][col] = self.marker  # type: ignore
         self.territory_count += 1
         # Walk North recursively
         self.calc_score_liberties(row - 1, col)
@@ -322,10 +324,20 @@ class Board:
         self.calc_score_liberties(row, col - 1)
 
     def remove_dead_stones(self, row, col, turn):
+        # Dead black stones
         if turn == False and self.board[row][col] == self.black_stone:
-            self.board[row][col] = self.b_death_stone
+            self.board[row][col] = self.b_death_stone  # type: ignore
+            self.captued_black_stones += 1
+        elif turn == False and self.board[row][col] == self.b_death_stone:
+            self.board[row][col] = self.black_stone  # type: ignore
+            self.captued_black_stones -= 1
+        # Dead white stones
         elif turn == True and self.board[row][col] == self.white_stone:
-            self.board[row][col] = self.w_death_stone
+            self.board[row][col] = self.w_death_stone  # type: ignore
+            self.captued_white_stones += 1
+        elif turn == True and self.board[row][col] == self.w_death_stone:
+            self.board[row][col] = self.white_stone  # type: ignore
+            self.captued_white_stones -= 1
 
     # For debug
     def print_board(self, board):

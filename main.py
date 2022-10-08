@@ -9,6 +9,7 @@ pygame.display.set_caption('Go by Gavril Marinov (a python GURU)')
 logo = pygame.image.load(os.path.join('images', 'go_icon.png'))
 pygame.display.set_icon(logo)
 win = pygame.display.set_mode((WIDTH, HEIGHT))
+game_end = False
 
 # Transform mouse position into rows and columns of the board list
 def get_row_col_mouse(pos):
@@ -60,9 +61,8 @@ def main():
                     board.white_to_move = True
                 # If ready button is clicked (white)
                 elif (interface.pos_x <= pos[0] <= interface.pos_x + interface.ready_width and 
-                      interface.b_ready_pos_y <= pos[1] <= interface.b_ready_pos_y + interface.ready_height):
-                    pass
-
+                      interface.w_ready_pos_y <= pos[1] <= interface.w_ready_pos_y + interface.ready_height):
+                    board.calc_score()
         board.draw_squares(win)
         board.draw_stones(win)
         # Game in progress
@@ -73,17 +73,17 @@ def main():
             interface.draw_pass(win, pos, board.white_to_move)
             if board.start_time and pygame.time.get_ticks() - board.start_time < 600:
                 interface.draw_inv_move(win)
-        # Game calc score
-        if board.pass_count == 2:
+        # Remove dead stones
+        if board.pass_count == 2 and board.game_end == False:
             interface.draw_death_stones_msg(win, board.white_to_move)
             interface.draw_players_text(win, board.captued_white_stones, 
                                         board.captued_black_stones)
             interface.draw_ready(win, pos, board.white_to_move)
-            
-            # board.calc_score()
-            # interface.draw_total_score(win, board.white_territory_count, board.captued_black_stones,
-            #                     board.black_territory_count, board.captued_white_stones, board.komi)
-
+        # Final score
+        if board.game_end == True:
+            interface.draw_players_text(
+                        win, board.captued_white_stones, board.captued_black_stones)
+            interface.draw_total_score(win, board.white_territory_count, board.captued_black_stones,
+                                    board.black_territory_count, board.captued_white_stones, board.komi)
         pygame.display.update()
-
 main()
