@@ -223,10 +223,11 @@ class Board:
                     else:
                         self.captued_black_stones += 1
                     self.captured_turn += 1
-        if self.capture_count >= 2:
-            self.ko = self.ko_list[self.ko_list_counter - 1]
+        if self.capture_count >= 2 and self.ko_list:
+                self.ko = self.ko_list[self.ko_list_counter - 1]
         else:
             self.ko = self.ko_board
+        pass
         # If it's a Ko move, restore the stone
         if self.ko == self.board:
             for x in range(21):
