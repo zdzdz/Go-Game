@@ -137,10 +137,8 @@ class Board:
         if self.capture_board == True:
             # Board capture prior player's turn
             self.ko_board = copy.deepcopy(self.board)
-            # Avoid clicking on already placed stones
         if self.board[row][col] != placed_stone and self.board[row][col] != opponent_stone:
             self.board[row][col] = placed_stone
-            # Switch turn
             self.white_to_move = not self.white_to_move
             self.check_move(row, col, placed_stone, opponent_stone)
 
@@ -167,18 +165,15 @@ class Board:
                     self.restore_board(opponent_stone)
         # Check if move is suicidial
         if self.suicidal_move(row, col, placed_stone) == True:
-            # If move is suicidal, keep the turn for the current player
             self.white_to_move = not self.white_to_move
-            # If move is suicidal, do not capture board state
             self.capture_board = False
-            # Set delay for invalid move message
             self.start_time = pygame.time.get_ticks()
         # Append board state if stone is captured in a ko state
         if self.capture_count >= 1 and self.stone_captured == True:
             self.ko_board2 = copy.deepcopy(self.board)
             self.ko_list.append(self.ko_board2)
             self.ko_list_counter += 1
-        # Reset ko board list and counter if stone with liberties is placed on the board / Ko sequence is terminated
+        # Reset ko board list and counter if stone is placed on the board
         if self.capture_board == True:
             self.stone_sound.play()
             self.capture_count = 0
@@ -234,9 +229,7 @@ class Board:
                 for y in range(21):
                     stone = self.capture_block[x][y]
                     if self.capture_block[x][y] != 1 and stone == stone_to_calc:
-                        # Restore the stone on the board if its a invalid Ko move
                         self.board[x][y] = stone_to_calc
-                        # Restore captured stones count for the interface
                         if stone_to_calc == self.white_stone:
                             self.captued_white_stones -= 1
                         else:
@@ -245,7 +238,6 @@ class Board:
                         # Set delay for invalid move message
                         self.start_time = pygame.time.get_ticks()
         else:
-            # Stone is caputred
             self.stone_captured = True
             # Increase capture count for Ko calculations
             self.capture_count += 1
@@ -265,7 +257,6 @@ class Board:
         if len(self.liberties) == 0:
             # Set intersection as empty on the board if move is suicidial
             self.board[row][col] = 0
-            # self.restore_board(stone_to_calc)
             self.restore_board(stone_to_calc)
             return True
         self.restore_board(stone_to_calc)
