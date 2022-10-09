@@ -1,4 +1,5 @@
 import pygame
+import os
 from constants import DARK_GREY, LIGHT_GREY, WHITE, RED, GREEN
 
 class Interface:
@@ -8,8 +9,10 @@ class Interface:
         self.int_font2 = pygame.font.SysFont('Consolas', 28, bold=True)
         self.int_font3 = pygame.font.SysFont('Consolas', 18)
         self.int_font4 = pygame.font.SysFont('Consolas', 18, bold=True)
-        # x position for pass, ready, players tab and new game
+        # x position for the interface buttons
         self.pos_x = 796
+        # Button height
+        self.butt_height = 35
         # Pass button
         self.pass_width = 70
         self.pass_height = 40
@@ -19,7 +22,6 @@ class Interface:
             'pass', True, WHITE)
         # Ready button
         self.ready_width = 85
-        self.ready_height = 35
         self.b_ready_pos_y = 124
         self.w_ready_pos_y = 454
         self.ready_text = self.int_font.render(
@@ -35,7 +37,6 @@ class Interface:
             'White', True, WHITE)
         # Invalid move
         self.inv_move_width = 201
-        self.inv_move_height = 35
         self.inv_move_pos_x = 282
         self.inv_move_pos_y = 367
         self.inv_move_txt = self.int_font2.render(
@@ -52,35 +53,39 @@ class Interface:
             'Remove the death stones', True, RED)
         # New Game
         self.new_game_width = 130
-        self.new_game_height = 34
         self.new_game_pos_y = 607
         self.new_game_text = self.int_font2.render(
             'New Game', True, WHITE)
         # Quit
         self.quit_width = 144
-        self.quit_height = 34
         self.quit_pos_y = 650
         self.quit_text = self.int_font2.render(
             'Exit Game', True, WHITE)
+        # Win sound
+        self.win_sound_check = True
+        self.black_wins_sound = pygame.mixer.Sound(os.path.join('sounds', 'black_wins.wav'))
+        self.white_wins_sound = pygame.mixer.Sound(os.path.join('sounds', 'white_wins.wav'))
 
     def draw_pass(self, win, pos, turn):
         if turn == False:
-            if (self.pos_x <= pos[0] <= self.pos_x + self.pass_width and self.b_pass_pos_y <= pos[1] <= self.b_pass_pos_y + self.pass_height):
-                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x,
-                                self.b_pass_pos_y, self.pass_width, self.pass_height))
+            if (self.pos_x <= pos[0] <= self.pos_x + self.pass_width and
+                self.b_pass_pos_y <= pos[1] <= self.b_pass_pos_y + self.pass_height):
+                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x, self.b_pass_pos_y, 
+                                                   self.pass_width, self.pass_height))
                 win.blit(self.pass_text, (self.pos_x + 5, self.b_pass_pos_y + 5))
             else:
-                pygame.draw.rect(win, DARK_GREY, (self.pos_x,
-                                self.b_pass_pos_y, self.pass_width, self.pass_height))
+                pygame.draw.rect(win, DARK_GREY, (self.pos_x, self.b_pass_pos_y, 
+                                                  self.pass_width, self.pass_height))
                 win.blit(self.pass_text, (self.pos_x + 5, self.b_pass_pos_y + 5))
         else:
-            if (self.pos_x <= pos[0] <= self.pos_x + self.pass_width and self.w_pass_pos_y <= pos[1] <= self.w_pass_pos_y + self.pass_height):
-                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x,
-                                self.w_pass_pos_y, self.pass_width, self.pass_height))
+            if (self.pos_x <= pos[0] <= self.pos_x + self.pass_width and 
+                self.w_pass_pos_y <= pos[1] <= self.w_pass_pos_y + self.pass_height):
+                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x, self.w_pass_pos_y, 
+                                                   self.pass_width, self.pass_height))
                 win.blit(self.pass_text, (self.pos_x + 5, self.w_pass_pos_y + 5))
             else:
-                pygame.draw.rect(win, DARK_GREY, (self.pos_x,
-                                self.w_pass_pos_y, self.pass_width, self.pass_height))
+                pygame.draw.rect(win, DARK_GREY, (self.pos_x, self.w_pass_pos_y, 
+                                                  self.pass_width, self.pass_height))
                 win.blit(self.pass_text, (self.pos_x + 5, self.w_pass_pos_y + 5))
 
     def draw_players_text(self, win, b_count, w_count):
@@ -107,11 +112,12 @@ class Interface:
 
     def draw_inv_move(self, win):
         pygame.draw.rect(win, LIGHT_GREY, (self.inv_move_pos_x,
-                         self.inv_move_pos_y, self.inv_move_width, self.inv_move_height))
+                         self.inv_move_pos_y, self.inv_move_width, self.butt_height))
         win.blit(self.inv_move_txt,
-                 (self.inv_move_pos_x + 5, self.inv_move_pos_y + 5))
+                (self.inv_move_pos_x + 5, self.inv_move_pos_y + 5))
 
-    def draw_total_score(self, win, white_territory, captured_black_stones, black_territory, captured_white_stones, komi):
+    def draw_total_score(self, win, white_territory, captured_black_stones, 
+                         black_territory, captured_white_stones, komi):
         white_territory_txt = self.int_font3.render(
             'Territory: ' + str(white_territory), True, WHITE)
         black_territory_txt = self.int_font3.render(
@@ -133,57 +139,64 @@ class Interface:
             'White Wins!', True, GREEN)
         if white_territory + captured_black_stones + komi > black_territory + captured_white_stones:
             win.blit(white_wins, (self.pos_x + 5, self.w_p_pos_y + 5))
+            if self.win_sound_check == True:
+                self.white_wins_sound.play()
         else:
             win.blit(black_wins, (self.pos_x + 5, self.b_p_pos_y + 5))
+            if self.win_sound_check == True:
+                self.black_wins_sound.play()
+        self.win_sound_check = False
 
     def draw_death_stones_msg(self, win, turn):
         if turn == False:
-            pygame.draw.rect(win, LIGHT_GREY, (self.death_stones_pos_x,
-                             self.b_death_stones_pos_y, self.death_stones_width, self.death_stones_height))
-            win.blit(self.death_stones_txt, (self.death_stones_pos_x +
-                     5, self.b_death_stones_txt_pos_y))
+            pygame.draw.rect(win, LIGHT_GREY, (self.death_stones_pos_x, self.b_death_stones_pos_y, 
+                                               self.death_stones_width, self.death_stones_height))
+            win.blit(self.death_stones_txt, (self.death_stones_pos_x +5, self.b_death_stones_txt_pos_y))
         else:
-            pygame.draw.rect(win, LIGHT_GREY, (self.death_stones_pos_x,
-                             self.w_p_pos_y, self.death_stones_width, self.death_stones_height))
-            win.blit(self.death_stones_txt, (self.death_stones_pos_x +
-                     5, self.w_death_stones_txt_pos_y))
+            pygame.draw.rect(win, LIGHT_GREY, (self.death_stones_pos_x, self.w_p_pos_y, 
+                                               self.death_stones_width, self.death_stones_height))
+            win.blit(self.death_stones_txt, (self.death_stones_pos_x +5, self.w_death_stones_txt_pos_y))
 
     def draw_ready(self, win, pos, turn):
         if turn == False:
-            if (self.pos_x <= pos[0] <= self.pos_x + self.ready_width and self.b_ready_pos_y <= pos[1] <= self.b_ready_pos_y + self.ready_height):
-                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x,
-                                self.b_ready_pos_y, self.ready_width, self.ready_height))
+            if (self.pos_x <= pos[0] <= self.pos_x + self.ready_width and 
+                self.b_ready_pos_y <= pos[1] <= self.b_ready_pos_y + self.butt_height):
+                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x, self.b_ready_pos_y, 
+                                                   self.ready_width, self.butt_height))
                 win.blit(self.ready_text, (self.pos_x + 5, self.b_ready_pos_y + 5))
             else:
-                pygame.draw.rect(win, DARK_GREY, (self.pos_x,
-                                self.b_ready_pos_y, self.ready_width, self.ready_height))
+                pygame.draw.rect(win, DARK_GREY, (self.pos_x, self.b_ready_pos_y, 
+                                                  self.ready_width, self.butt_height))
                 win.blit(self.ready_text, (self.pos_x + 5, self.b_ready_pos_y + 5))
         else:
-            if (self.pos_x <= pos[0] <= self.pos_x + self.ready_width and self.w_ready_pos_y <= pos[1] <= self.w_ready_pos_y + self.ready_height):
-                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x,
-                                self.w_ready_pos_y, self.ready_width, self.ready_height))
+            if (self.pos_x <= pos[0] <= self.pos_x + self.ready_width and 
+                self.w_ready_pos_y <= pos[1] <= self.w_ready_pos_y + self.butt_height):
+                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x, self.w_ready_pos_y, 
+                                                   self.ready_width, self.butt_height))
                 win.blit(self.ready_text, (self.pos_x + 5, self.w_ready_pos_y + 5))
             else:
-                pygame.draw.rect(win, DARK_GREY, (self.pos_x,
-                                self.w_ready_pos_y, self.ready_width, self.ready_height))
+                pygame.draw.rect(win, DARK_GREY, (self.pos_x, self.w_ready_pos_y, 
+                                                  self.ready_width, self.butt_height))
                 win.blit(self.ready_text, (self.pos_x + 5, self.w_ready_pos_y + 5))
-    
+
     def draw_new_game(self, win, pos):
-            if (self.pos_x <= pos[0] <= self.pos_x + self.new_game_width and self.new_game_pos_y <= pos[1] <= self.new_game_pos_y + self.new_game_height):
-                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x,
-                                self.new_game_pos_y, self.new_game_width, self.new_game_height))
-                win.blit(self.new_game_text, (self.pos_x + 5, self.new_game_pos_y + 5))
-            else:
-                pygame.draw.rect(win, DARK_GREY, (self.pos_x,
-                                self.new_game_pos_y, self.new_game_width, self.new_game_height))
-                win.blit(self.new_game_text, (self.pos_x + 5, self.new_game_pos_y + 5))
+        if (self.pos_x <= pos[0] <= self.pos_x + self.new_game_width and 
+            self.new_game_pos_y <= pos[1] <= self.new_game_pos_y + self.butt_height):
+            pygame.draw.rect(win, LIGHT_GREY, (self.pos_x, self.new_game_pos_y, 
+                                               self.new_game_width, self.butt_height))
+            win.blit(self.new_game_text, (self.pos_x + 5, self.new_game_pos_y + 5))
+        else:
+            pygame.draw.rect(win, DARK_GREY, (self.pos_x, self.new_game_pos_y, 
+                                              self.new_game_width, self.butt_height))
+            win.blit(self.new_game_text, (self.pos_x + 5, self.new_game_pos_y + 5))
 
     def draw_quit(self, win, pos):
-            if (self.pos_x <= pos[0] <= self.pos_x + self.quit_width and self.quit_pos_y <= pos[1] <= self.quit_pos_y + self.quit_height):
-                pygame.draw.rect(win, LIGHT_GREY, (self.pos_x,
-                                self.quit_pos_y, self.quit_width, self.quit_height))
-                win.blit(self.quit_text, (self.pos_x + 5, self.quit_pos_y + 5))
-            else:
-                pygame.draw.rect(win, DARK_GREY, (self.pos_x,
-                                self.quit_pos_y, self.quit_width, self.quit_height))
-                win.blit(self.quit_text, (self.pos_x + 5, self.quit_pos_y + 5))
+        if (self.pos_x <= pos[0] <= self.pos_x + self.quit_width and 
+            self.quit_pos_y <= pos[1] <= self.quit_pos_y + self.butt_height):
+            pygame.draw.rect(win, LIGHT_GREY, (self.pos_x, self.quit_pos_y, 
+                                               self.quit_width, self.butt_height))
+            win.blit(self.quit_text, (self.pos_x + 5, self.quit_pos_y + 5))
+        else:
+            pygame.draw.rect(win, DARK_GREY, (self.pos_x, self.quit_pos_y, 
+                                              self.quit_width, self.butt_height))
+            win.blit(self.quit_text, (self.pos_x + 5, self.quit_pos_y + 5))

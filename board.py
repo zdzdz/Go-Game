@@ -70,9 +70,13 @@ class Board:
         self.capture_count = 0
         self.ko_list_counter = -1
         self.ko_list = []
-        self.board_img = pygame.image.load(os.path.join('images', 'Board1.png'))
-        # self.stone_sound = pygame.mixer.Sound(os.path.join('sounds', 'Short.m4a'))
-        # self.capture_sound = pygame.mixer.Sound(os.path.join('sounds', 'Long.wav'))
+        self.board_img = pygame.image.load(os.path.join('images', 'board.png'))
+        self.stone_sound = pygame.mixer.Sound(os.path.join('sounds', 'place.wav'))
+        self.capture_sound = pygame.mixer.Sound(os.path.join('sounds', 'capture_single.wav'))
+        self.capture_sound_m = pygame.mixer.Sound(os.path.join('sounds', 'capture_many.wav'))
+        self.pass_sound = pygame.mixer.Sound(os.path.join('sounds', 'pass.wav'))
+        self.remove_sound = pygame.mixer.Sound(os.path.join('sounds', 'remove.wav'))
+        self.remove_sound_check = True
         self.pass_count = 0
         self.score_border_b = False
         self.score_border_w = False
@@ -81,6 +85,7 @@ class Board:
         self.white_territory_count = 0
         self.captued_white_stones = 0
         self.captued_black_stones = 0
+        self.captured_turn = 0
         self.komi = 6.5
         self.start_time = None
         self.game_end = False
@@ -120,7 +125,7 @@ class Board:
                     field = Stone(x, y, WHITE)
                     field.draw_territory(win)
                 elif field == self.w_death_stone:
-                    field = Stone(x, y, DARK_WHITE)
+                    field = Stone(x, y, WHITE)
                     field.draw_stone(win)
                     field.draw_cross(win)
                 elif field == self.b_death_stone:
@@ -141,6 +146,7 @@ class Board:
 
     def pass_move(self):
         # Skip move if pass
+        self.pass_sound.play()
         self.white_to_move = not self.white_to_move
         self.pass_count += 1
         if self.pass_count == 2:
@@ -174,11 +180,10 @@ class Board:
             self.ko_list_counter += 1
         # Reset ko board list and counter if stone with liberties is placed on the board / Ko sequence is terminated
         if self.capture_board == True:
-            # self.stone_sound.play()
+            self.stone_sound.play()
             self.capture_count = 0
             self.ko_list_counter = -1
             self.ko_list = []
-            # Reset pass counter as a stone is placed
             self.pass_count = 0
 
     def calc_liberties(self, row, col, stone_to_calc):
@@ -217,6 +222,7 @@ class Board:
                         self.captued_white_stones += 1
                     else:
                         self.captued_black_stones += 1
+                    self.captured_turn += 1
         if self.capture_count >= 2:
             self.ko = self.ko_list[self.ko_list_counter - 1]
         else:
@@ -234,6 +240,7 @@ class Board:
                             self.captued_white_stones -= 1
                         else:
                             self.captued_black_stones -= 1
+                        self.captured_turn -= 1
                         # Set delay for invalid move message
                         self.start_time = pygame.time.get_ticks()
         else:
@@ -244,7 +251,11 @@ class Board:
             # Reset pass counter
             self.pass_count = 0
             # Play capture sound
-            # self.capture_sound.play()
+            if self.captured_turn == 1:
+                self.capture_sound.play()
+            else:
+                self.capture_sound_m.play()
+            self.captured_turn = 0
         # Prevent capturing of the board
         self.capture_board = False
 
