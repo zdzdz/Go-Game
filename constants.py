@@ -1,6 +1,11 @@
+import pygame
+
 # Size
 WIDTH, HEIGHT = 1024, 768
 SQUARE_SIZE = 800 // 20
+
+# Window
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # Colors (rgb)
 BLACK = (0, 0, 0)

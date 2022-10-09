@@ -1,5 +1,5 @@
 import pygame
-from constants import BLACK, SQUARE_SIZE, DARK_GREY, DARK_WHITE, WHITE
+from constants import BLACK, SQUARE_SIZE, DARK_GREY, DARK_WHITE, WHITE, WIN
 from stones import Stone
 import copy
 import os
@@ -61,6 +61,7 @@ class Board:
         self.black_territory = 'bt'
         self.white_territory = 'wt'
         self.neutral_territory = 'n'
+        self.stone_placed = False
         self.marker = 'x'
         self.liberty = '+'
         self.liberties = []
@@ -161,7 +162,7 @@ class Board:
                     self.calc_liberties(x, y, opponent_stone)
                     if len(self.liberties) == 0:
                         # Try to capture opponent stone/s
-                        self.capture_stones(opponent_stone)
+                        self.capture_stones(opponent_stone, row, col)
                     self.restore_board(opponent_stone)
         # Check if move is suicidial
         if self.suicidal_move(row, col, placed_stone) == True:
@@ -180,6 +181,9 @@ class Board:
             self.ko_list_counter = -1
             self.ko_list = []
             self.pass_count = 0
+            self.stone_placed = True
+            self.pos_x = row
+            self.pos_y = col
 
     def calc_liberties(self, row, col, stone_to_calc):
         stone = self.board[row][col]
@@ -204,7 +208,7 @@ class Board:
             # Save the liberties in a list
             self.liberties.append(self.board[row][col])
 
-    def capture_stones(self, stone_to_calc):
+    def capture_stones(self, stone_to_calc, row, col):
         # Set capture block for ko calculation
         for x in range(21):
             for y in range(21):
@@ -249,6 +253,8 @@ class Board:
             else:
                 self.capture_sound_m.play()
             self.captured_turn = 0
+            self.pos_x = row
+            self.pos_y = col
         # Prevent capturing of the board
         self.capture_board = False
 
@@ -341,6 +347,14 @@ class Board:
         elif turn == True and self.board[row][col] == self.w_death_stone:
             self.board[row][col] = self.white_stone  # type: ignore
             self.captued_white_stones -= 1
+
+    def draw_circle(self, win, row, col, turn):
+            x = SQUARE_SIZE * (col) + SQUARE_SIZE // 2
+            y = SQUARE_SIZE * (row) + SQUARE_SIZE // 2
+            if turn == False:
+                pygame.draw.circle(win, BLACK, (x - 36, y - 36), 12, width = 3)
+            else:
+                pygame.draw.circle(win, WHITE, (x - 36, y - 36), 12, width = 3)
 
     # For debug
     def print_board(self, board):

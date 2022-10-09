@@ -1,7 +1,7 @@
 import pygame
 import os
 import sys
-from constants import SQUARE_SIZE, WIDTH, HEIGHT, FPS
+from constants import SQUARE_SIZE, FPS, WIN
 from board import Board
 from interface import Interface
 
@@ -9,7 +9,6 @@ pygame.init()
 pygame.display.set_caption('Go by Gavril Marinov')
 logo = pygame.image.load(os.path.join('images', 'go_icon.png'))
 pygame.display.set_icon(logo)
-win = pygame.display.set_mode((WIDTH, HEIGHT))
 
 # Transform mouse position into rows and columns of the board list
 def get_row_col_mouse(pos):
@@ -75,31 +74,33 @@ def main():
                       interface.quit_pos_y <= pos[1] <= interface.quit_pos_y + interface.butt_height):
                     pygame.QUIT
                     sys.exit()
-        board.draw_squares(win)
-        board.draw_stones(win)
-        interface.draw_quit(win, pos)
+        board.draw_squares(WIN)
+        board.draw_stones(WIN)
+        if board.stone_placed == True:
+            board.draw_circle(WIN, board.pos_x, board.pos_y, board.white_to_move)
+        interface.draw_quit(WIN, pos)
         # Game in progress
         if board.pass_count < 2:
-            interface.draw_players_turn(win, board.white_to_move)
+            interface.draw_players_turn(WIN, board.white_to_move)
             interface.draw_players_text(
-            win, board.captued_white_stones, board.captued_black_stones)
-            interface.draw_pass(win, pos, board.white_to_move)
+            WIN, board.captued_white_stones, board.captued_black_stones)
+            interface.draw_pass(WIN, pos, board.white_to_move)
             if board.start_time and pygame.time.get_ticks() - board.start_time < 600:
-                interface.draw_inv_move(win)
+                interface.draw_inv_move(WIN)
         # Remove dead stones
         if board.pass_count == 2 and board.game_end == False:
             if board.remove_sound_check == True:
                 board.remove_sound.play()
                 board.remove_sound_check = False
-            interface.draw_death_stones_msg(win, board.white_to_move)
-            interface.draw_players_text(win, board.captued_white_stones, 
+            interface.draw_death_stones_msg(WIN, board.white_to_move)
+            interface.draw_players_text(WIN, board.captued_white_stones, 
                                         board.captued_black_stones)
-            interface.draw_ready(win, pos, board.white_to_move)
+            interface.draw_ready(WIN, pos, board.white_to_move)
         # Final score
         if board.game_end == True:
-            interface.draw_players_text(win, board.captued_white_stones, board.captued_black_stones)
-            interface.draw_total_score(win, board.white_territory_count, board.captued_black_stones, 
+            interface.draw_players_text(WIN, board.captued_white_stones, board.captued_black_stones)
+            interface.draw_total_score(WIN, board.white_territory_count, board.captued_black_stones, 
                                        board.black_territory_count, board.captued_white_stones, board.komi)               
-            interface.draw_new_game(win, pos)
+            interface.draw_new_game(WIN, pos)
         pygame.display.update()
 main()

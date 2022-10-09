@@ -2,7 +2,7 @@ import pygame
 from constants import SQUARE_SIZE, RED
 
 class Stone:
-
+    
     def __init__(self, row, col, color):
         self.row = row - 1 # - 1 because the ending rows/colums are 1 and not playable
         self.col = col - 1 # - 1 because the ending rows/colums are 1 and not playable
